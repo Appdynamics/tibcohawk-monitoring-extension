@@ -12,7 +12,8 @@ import COM.TIBCO.hawk.talon.CompositeData;
 import COM.TIBCO.hawk.talon.DataElement;
 import COM.TIBCO.hawk.talon.MicroAgentException;
 import COM.TIBCO.hawk.talon.TabularData;
-import org.apache.log4j.Logger;
+import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
+import org.slf4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public class TibcoResultParser {
 
-    private static final Logger logger = Logger.getLogger(TibcoResultParser.class);
+    private static final Logger logger = ExtensionsLoggerFactory.getLogger(TibcoResultParser.class);
 
     public List<String> parseMicroAgentInfoResult(Object methodResult, List<String> bwMicroagentNameMatcher) {
         List<String> microAgentIds = new ArrayList<String>();

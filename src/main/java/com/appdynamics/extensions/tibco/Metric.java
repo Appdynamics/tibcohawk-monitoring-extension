@@ -8,8 +8,9 @@
 
 package com.appdynamics.extensions.tibco;
 
-import com.appdynamics.extensions.StringUtils;
-import org.apache.log4j.Logger;
+import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
+import com.appdynamics.extensions.util.StringUtils;
+import org.slf4j.Logger;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,7 +26,7 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Metric {
 
-    private static final Logger logger = Logger.getLogger(Metric.class);
+    private static final Logger logger = ExtensionsLoggerFactory.getLogger(Metric.class);
 
     @XmlAttribute
     private String columnName;
