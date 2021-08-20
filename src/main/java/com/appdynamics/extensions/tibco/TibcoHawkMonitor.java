@@ -11,26 +11,14 @@ package com.appdynamics.extensions.tibco;
 
 import com.appdynamics.extensions.ABaseMonitor;
 
-import com.appdynamics.extensions.MetricWriteHelper;
 import com.appdynamics.extensions.TasksExecutionServiceProvider;
 import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.appdynamics.extensions.util.AssertUtils;
-import com.singularity.ee.agent.systemagent.api.AManagedMonitor;
-import com.singularity.ee.agent.systemagent.api.TaskExecutionContext;
-import com.singularity.ee.agent.systemagent.api.TaskOutput;
-import com.singularity.ee.agent.systemagent.api.exception.TaskExecutionException;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.slf4j.Logger;
-import org.apache.log4j.PatternLayout;
 
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
+import org.slf4j.Logger;
+
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -98,23 +86,6 @@ public class TibcoHawkMonitor extends ABaseMonitor {
 
     protected List<Map<String, ?>> getServers() {
         return (List<Map<String, ?>>) getContextConfiguration().getConfigYml().get("hawkConnection");
-    }
-
-        public static void main(String[] args) throws TaskExecutionException {
-
-        ConsoleAppender ca = new ConsoleAppender();
-        ca.setWriter(new OutputStreamWriter(System.out));
-        ca.setLayout(new PatternLayout("%-5p [%t]: %m%n"));
-        ca.setThreshold(Level.DEBUG);
-        org.apache.log4j.Logger.getRootLogger().addAppender(ca);
-
-            TibcoHawkMonitor monitor = new TibcoHawkMonitor();
-        final Map<String, String> taskArgs = new HashMap<>();
-        taskArgs.put("config-file", "src/main/resources/conf/config.yaml");
-        taskArgs.put("metric-file", "src/main/resources/conf/metrics.xml");
-
-        monitor.execute(taskArgs, null);
-
     }
 
 }

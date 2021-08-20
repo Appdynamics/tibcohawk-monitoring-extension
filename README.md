@@ -168,48 +168,43 @@ For each activity in each process definition following metrics are displayed
 | ExecutionCountSinceReset | Number of activity executions that have completed since the last reset of the statistics.  |
 
 
-## Troubleshooting
+### Credentials Encryption
 
-1. Verify Machine Agent Data: Please start the Machine Agent without the extension and make sure that it reports data. Verify that the machine agent status is UP and it is reporting Hardware Metrics
-2. config.yml: Validate the file [here] (http://www.yamllint.com/)
-3. Tibco HAWK BW Microagents: Please verify that BW hawk micro agents are available using hawk display.
-4. Metric Limit: Please start the machine agent with the argument -Dappdynamics.agent.maxMetrics=5000 if there is a metric limit reached error in the logs. If you dont see the expected metrics, this could be the cause.
-5. Check Logs: There could be some obvious errors in the machine agent logs. Please take a look.
-6. Collect Debug Logs: Edit the file, <MachineAgent>/conf/logging/log4j.xml and update the level of the appender com.appdynamics to debug Let it run for 5-10 minutes and attach the logs to a support ticket
+Please visit [this page](https://community.appdynamics.com/t5/Knowledge-Base/How-to-use-Password-Encryption-with-Extensions/ta-p/29397) to get detailed instructions on password encryption. The steps in this document will guide you through the whole process.
 
+### Extensions Workbench
+Workbench is an inbuilt feature provided with each extension in order to assist you to fine tune the extension setup before you actually deploy it on the controller. Please review the following document on [How to use the Extensions WorkBench](https://community.appdynamics.com/t5/Knowledge-Base/How-to-use-the-Extensions-WorkBench/ta-p/30130)
 
-## Workbench
+### Troubleshooting
+1. Please ensure the RabbitMQ Management Plugin is enabled. Please check "" section of [this page](http://www.rabbitmq.com/management.html) for more details.
+2. Please follow the steps listed in this [troubleshooting-document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) in order to troubleshoot your issue. These are a set of common issues that customers might have faced during the installation of the extension. If these don't solve your issue, please follow the last step on the [troubleshooting-document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) to contact the support team.
 
-Workbench is a feature by which you can preview the metrics before registering it with the controller. This is useful if you want to fine tune the configurations. Workbench is embedded into the extension jar.
+### Support Tickets
+If after going through the [Troubleshooting Document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) you have not been able to get your extension working, please file a ticket and add the following information.
 
-To use the workbench
+Please provide the following in order for us to assist you better.
 
-* Follow all the installation steps
-* Start the workbench with the command
-~~~
-  java -jar /path/to/MachineAgent/monitors/TibcoHawkMonitor/tibco-hawk-monitoring-extension.jar
-  This starts an http server at http://host:9090/. This can be accessed from the browser.
-~~~
-* If the server is not accessible from outside/browser, you can use the following end points to see the list of registered metrics and errors.
-~~~
-    #Get the stats
-    curl http://localhost:9090/api/stats
-    #Get the registered metrics
-    curl http://localhost:9090/api/metric-paths
-~~~
-* You can make the changes to config.yml and validate it from the browser or the API
-* Once the configuration is complete, you can kill the workbench and start the Machine Agent
+    1. Stop the running machine agent.
+    2. Delete all existing logs under <MachineAgent>/logs.
+    3. Please enable debug logging by editing the file <MachineAgent>/conf/logging/log4j.xml. Change the level value of the following <logger> elements to debug.
+        <logger name="com.singularity">
+        <logger name="com.appdynamics">
+    4. Start the machine agent and please let it run for 10 mins. Then zip and upload all the logs in the directory <MachineAgent>/logs/*.
+    5. Attach the zipped <MachineAgent>/conf/* directory here.
+    6. Attach the zipped <MachineAgent>/monitors/ExtensionFolderYouAreHavingIssuesWith directory here.
+
+For any support related questions, you can also contact help@appdynamics.com.
 
 
-## Contributing
 
-Always feel free to fork and contribute any changes directly via [GitHub](https://github.com/Appdynamics/tibco-hawk-monitoring-extension).
+### Contributing
 
-## Community
+Always feel free to fork and contribute any changes directly here on [GitHub](https://github.com/Appdynamics/tibcohawk-monitoring-extension/).
 
-Find out more in the [AppSphere](https://www.appdynamics.com/community/exchange/) community.
-
-## Support
-
-For any questions or feature request, please contact [AppDynamics Center of Excellence](mailto:help@appdynamics.com).
-
+### Version
+|          Name            |  Version   |
+|--------------------------|------------|
+|Extension Version         |2.0.0       |
+|Controller Compatibility  |4.5 or Later|
+|Machine Agent Version     |4.5.13+     |
+|Last Update               |20/08/2021 |
