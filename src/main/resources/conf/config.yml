@@ -1,3 +1,10 @@
+#Metric prefix used when SIM is enabled for your machine agent
+#metricPrefix: "Custom Metrics|Tibco BW|"
+
+#This will publish metrics to specific tier
+#Instructions on how to retrieve the Component ID can be found in the Metric Prefix section of https://community.appdynamics.com/t5/Knowledge-Base/How-do-I-troubleshoot-missing-custom-metrics-or-extensions/ta-p/28695
+metricPrefix: "Server|Component:<COMPONENT_ID>|Custom Metrics|Tibco BW"
+
 hawkConnection:
    - displayName: "RV Domain"
      hawkDomain: "testDomain"
@@ -37,17 +44,32 @@ hawkConnection:
      bwMicroagentDisplayNameRegexGroupSeparator: "-"
 
 # number of concurrent tasks
-numberOfThreads: 2
+numberOfThreads: 5
 
 numberOfThreadsPerDomain: 5
 
-taskSchedule:
-    numberOfThreads: 1
-    taskDelaySeconds: 60
+#taskSchedule:
+#    numberOfThreads: 1
+#    taskDelaySeconds: 60
 
-#This will create this metric in all the tiers, under this path
-#metricPrefix: "Custom Metrics|Tibco BW|"
+# If any of the following fields are not set, the values of the specific fields are set from the system properties of the corresponding fields as specified in the comments.
+# If the system properties are not set for the field, then the data is retrieved from machine agent configFile. Please refer to ControllerInfoFactory for more details.
+# Values provided here can be overridden if the same field is configured in either controller-info.xml or system properties.
+controllerInfo:
+  controllerHost: "localhost"  # -Dappdynamics.controller.hostName
+  controllerPort: 8090 # -Dappdynamics.controller.port
+  controllerSslEnabled: false # -Dappdynamics.controller.ssl.enabled
+  enableOrchestration: false # N/A
+  uniqueHostId: "" # -Dappdynamics.agent.uniqueHostId
+  username: "" # -Dappdynamics.agent.monitors.controller.username
+  password: "" # -Dappdynamics.agent.monitors.controller.password
+  encryptedPassword: "" # -Dappdynamics.agent.monitors.controller.encryptedPassword
+  accountAccessKey: "" # -Dappdynamics.agent.accountAccessKey
+  account: "" # -Dappdynamics.agent.accountName
+  machinePath: "" # -Dappdynamics.machine.agent.hierarchyPath
+  simEnabled: false # -Dappdynamics.sim.enabled
+  applicationName: "" # -Dappdynamics.agent.applicationName
+  tierName: "" # -Dappdynamics.agent.tierName
+  nodeName: "" # -Dappdynamics.agent.nodeName
 
-#This will create it in specific Tier/Component. Make sure to replace <COMPONENT_ID> with the appropriate one from your environment.
-#To find the <COMPONENT_ID> in your environment, please follow the screenshot https://docs.appdynamics.com/display/PRO42/Build+a+Monitoring+Extension+Using+Java
-metricPrefix: "Server|Component:<COMPONENT_ID>|Custom Metrics|Tibco BW"
+encryptionKey: "abcd"

@@ -17,34 +17,34 @@ import COM.TIBCO.hawk.talon.MicroAgentData;
 import COM.TIBCO.hawk.talon.MicroAgentException;
 import COM.TIBCO.hawk.talon.MicroAgentID;
 import COM.TIBCO.hawk.utilities.misc.HawkConstants;
-import com.appdynamics.extensions.conf.MonitorConfiguration;
+import com.appdynamics.extensions.AMonitorTaskRunnable;
+import com.appdynamics.extensions.MetricWriteHelper;
+import com.appdynamics.extensions.conf.MonitorContextConfiguration;
+import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * @author Satish Muddam
  */
-public class HawkMetricFetcher implements Runnable {
+public class HawkMetricFetcher implements AMonitorTaskRunnable {
 
-    private static final Logger logger = Logger.getLogger(HawkMetricFetcher.class);
-
+    private static final Logger logger = ExtensionsLoggerFactory.getLogger(HawkMetricFetcher.class);
+    private MetricWriteHelper metricWriter;
     private static final String SELF_MICROAGENT_NAME = "COM.TIBCO.hawk.microagent.Self";
 
-    private MonitorConfiguration configuration;
+    private MonitorContextConfiguration configuration;
     private Map hawkConnection;
     private TibcoResultParser tibcoResultParser;
     private String hawkDomainDisplayName;
@@ -54,7 +54,8 @@ public class HawkMetricFetcher implements Runnable {
     private List<Integer> bwMicroagentDisplayNameRegexGroups;
     private String bwMicroagentDisplayNameRegexGroupSeparator;
 
-    public HawkMetricFetcher(MonitorConfiguration configuration, Map hawkConnection, Method[] methods, Integer numberOfThreadsPerDomain) {
+    public HawkMetricFetcher(MetricWriteHelper metricWriter, MonitorContextConfiguration configuration, Map hawkConnection, Method[] methods, Integer numberOfThreadsPerDomain) {
+        this.metricWriter=metricWriter;
         this.configuration = configuration;
         this.hawkConnection = hawkConnection;
         hawkDomainDisplayName = (String) hawkConnection.get("displayName");
@@ -66,6 +67,7 @@ public class HawkMetricFetcher implements Runnable {
         this.bwMicroagentDisplayNameRegexGroupSeparator = (String) hawkConnection.get("bwMicroagentDisplayNameRegexGroupSeparator");
     }
 
+    @Override
     public void run() {
         AgentManager agentManager = null;
         try {
@@ -272,7 +274,12 @@ public class HawkMetricFetcher implements Runnable {
         logger.debug("Collected " + tibcoMetrics.size() + " metrics for method [" + methodName + "] on microagent [" + agentDisplayName + "]");
 
         for (TibcoMetric tibcoMetric : tibcoMetrics) {
-            configuration.getMetricWriter().printMetric(configuration.getMetricPrefix() + "|" + hawkDomainDisplayName + "|" + agentDisplayName + "|" + methodNameWithDisplayName + "|" + tibcoMetric.getFullPath(), tibcoMetric.getValue(), tibcoMetric.getMetricType());
+            metricWriter.printMetric(configuration.getMetricPrefix() + "|" + hawkDomainDisplayName + "|" + agentDisplayName + "|" + methodNameWithDisplayName + "|" + tibcoMetric.getFullPath(), tibcoMetric.getValue(), tibcoMetric.getMetricType());
         }
+    }
+
+    @Override
+    public void onTaskComplete() {
+        logger.info("Completed Task for hawkConnection {}",hawkDomainDisplayName);
     }
 }
