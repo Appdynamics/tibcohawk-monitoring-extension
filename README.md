@@ -23,7 +23,7 @@ This extension works only with the standalone machine agent.
 
 ## Configuration
 
-### config.yaml
+### config.yml
 
 **Note: Please avoid using tab (\t) when editing yaml files. You may want to validate the yaml file using a [yaml validator](http://yamllint.com/).**
 
@@ -46,6 +46,13 @@ This file contains the methods to execute using BW hawk micro agents and metrics
 **Below is an example config for monitoring multiple BW  domains:**
 
 ~~~
+#Metric prefix used when SIM is enabled for your machine agent
+#metricPrefix: "Custom Metrics|Tibco BW|"
+
+#This will publish metrics to specific tier
+#Instructions on how to retrieve the Component ID can be found in the Metric Prefix section of https://community.appdynamics.com/t5/Knowledge-Base/How-do-I-troubleshoot-missing-custom-metrics-or-extensions/ta-p/28695
+metricPrefix: "Server|Component:<COMPONENT_ID>|Custom Metrics|Tibco BW"
+
 hawkConnection:
    - displayName: "RV Domain"
      hawkDomain: "testDomain"
@@ -85,20 +92,13 @@ hawkConnection:
      bwMicroagentDisplayNameRegexGroupSeparator: "-"
 
 # number of concurrent tasks
-numberOfThreads: 2
+numberOfThreads: 5
 
 numberOfThreadsPerDomain: 5
 
-taskSchedule:
-    numberOfThreads: 1
-    taskDelaySeconds: 60
-
-#This will create this metric in all the tiers, under this path
-#metricPrefix: "Custom Metrics|Tibco BW|"
-
-#This will create it in specific Tier/Component. Make sure to replace <COMPONENT_ID> with the appropriate one from your environment.
-#To find the <COMPONENT_ID> in your environment, please follow the screenshot https://docs.appdynamics.com/display/PRO42/Build+a+Monitoring+Extension+Using+Java
-metricPrefix: "Server|Component:<COMPONENT_ID>|Custom Metrics|Tibco BW"
+#taskSchedule:
+#    numberOfThreads: 1
+#    taskDelaySeconds: 60
 ~~~
 
 ## Metrics
@@ -168,40 +168,22 @@ For each activity in each process definition following metrics are displayed
 | ExecutionCountSinceReset | Number of activity executions that have completed since the last reset of the statistics.  |
 
 
-### Credentials Encryption
-
+## Credentials Encryption
 Please visit [this page](https://community.appdynamics.com/t5/Knowledge-Base/How-to-use-Password-Encryption-with-Extensions/ta-p/29397) to get detailed instructions on password encryption. The steps in this document will guide you through the whole process.
 
-### Extensions Workbench
+## Extensions Workbench
 Workbench is an inbuilt feature provided with each extension in order to assist you to fine tune the extension setup before you actually deploy it on the controller. Please review the following document on [How to use the Extensions WorkBench](https://community.appdynamics.com/t5/Knowledge-Base/How-to-use-the-Extensions-WorkBench/ta-p/30130)
 
-### Troubleshooting
-1. Please ensure the RabbitMQ Management Plugin is enabled. Please check "" section of [this page](http://www.rabbitmq.com/management.html) for more details.
-2. Please follow the steps listed in this [troubleshooting-document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) in order to troubleshoot your issue. These are a set of common issues that customers might have faced during the installation of the extension. If these don't solve your issue, please follow the last step on the [troubleshooting-document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) to contact the support team.
+## Troubleshooting
+1. Please follow the steps listed in this [troubleshooting-document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) in order to troubleshoot your issue. These are a set of common issues that customers might have faced during the installation of the extension.
+2. Verify Machine Agent Data: Please start the Machine Agent without the extension and make sure that it reports data. Verify that the machine agent status is UP and it is reporting Hardware Metrics.
+3. Tibco HAWK BW Microagents: Please verify that BW hawk micro agents are available using hawk display.
+4. Check Logs: There could be some obvious errors in the machine agent logs. Please take a look.
 
-### Support Tickets
-If after going through the [Troubleshooting Document](https://community.appdynamics.com/t5/Knowledge-Base/How-to-troubleshoot-missing-custom-metrics-or-extensions-metrics/ta-p/28695) you have not been able to get your extension working, please file a ticket and add the following information.
-
-Please provide the following in order for us to assist you better.
-
-    1. Stop the running machine agent.
-    2. Delete all existing logs under <MachineAgent>/logs.
-    3. Please enable debug logging by editing the file <MachineAgent>/conf/logging/log4j.xml. Change the level value of the following <logger> elements to debug.
-        <logger name="com.singularity">
-        <logger name="com.appdynamics">
-    4. Start the machine agent and please let it run for 10 mins. Then zip and upload all the logs in the directory <MachineAgent>/logs/*.
-    5. Attach the zipped <MachineAgent>/conf/* directory here.
-    6. Attach the zipped <MachineAgent>/monitors/ExtensionFolderYouAreHavingIssuesWith directory here.
-
-For any support related questions, you can also contact help@appdynamics.com.
-
-
-
-### Contributing
-
+## Contributing
 Always feel free to fork and contribute any changes directly here on [GitHub](https://github.com/Appdynamics/tibcohawk-monitoring-extension/).
 
-### Version
+## Version
 |          Name            |  Version   |
 |--------------------------|------------|
 |Extension Version         |2.0.0       |

@@ -27,29 +27,19 @@ import java.util.Map;
 public class TibcoHawkMonitor extends ABaseMonitor {
 
     private static final String METRIC_PREFIX = "Custom Metrics|Tibco|";
+    private static final String MONITOR_NAME = "Tibco Hawk Monitor";
 
     private static final Logger logger = ExtensionsLoggerFactory.getLogger(TibcoHawkMonitor.class);
 
-    private static final String CONFIG_ARG = "config-file";
-    private static final String METRIC_ARG = "metric-file";
 
-    private long previousTimestamp = 0;
-    private long currentTimestamp = System.currentTimeMillis();
-
-    private boolean initialized;
-    //private MonitorConfiguration configuration;
-
-
-    protected static String getImplementationVersion() {
-        return TibcoHawkMonitor.class.getPackage().getImplementationTitle();
-    }
-
+    @Override
     protected String getDefaultMetricPrefix() {
         return METRIC_PREFIX;
     }
 
+    @Override
     public String getMonitorName() {
-        return "Tibco Hawk Monitor";
+        return MONITOR_NAME;
     }
 
     @Override
@@ -57,6 +47,7 @@ public class TibcoHawkMonitor extends ABaseMonitor {
         this.getContextConfiguration().setMetricXml(args.get("metric-file"), Method.Methods.class);
     }
 
+    @Override
     protected void doRun(TasksExecutionServiceProvider tasksExecutionServiceProvider) {
         AssertUtils.assertNotNull(getContextConfiguration().getMetricsXml(), "Metrics xml not available");
         List<Map<String, ?>> servers = (List<Map<String, ?>>) getContextConfiguration().getConfigYml().get("hawkConnection");
@@ -68,22 +59,17 @@ public class TibcoHawkMonitor extends ABaseMonitor {
             logger.error("Methods are not configured in the metrics.xml. Exiting the process");
             return;
         }
-
-        previousTimestamp = currentTimestamp;
-        currentTimestamp = System.currentTimeMillis();
-        if (previousTimestamp != 0) {
-            for (Map<String, ?> server : servers) {
-                try {
-                    HawkMetricFetcher task = new HawkMetricFetcher(tasksExecutionServiceProvider, this.getContextConfiguration(), server, methods, numberOfThreadsPerDomain);
-
-                    tasksExecutionServiceProvider.submit((String) server.get("displayName"), task);
-                } catch (Exception e) {
-                    logger.error("Error while creating task for {}", Util.convertToString(server.get("displayName"), ""),e);
-                }
+        for (Map<String, ?> server : servers) {
+            try {
+                HawkMetricFetcher task = new HawkMetricFetcher(tasksExecutionServiceProvider.getMetricWriteHelper(), this.getContextConfiguration(), server, methods, numberOfThreadsPerDomain);
+                tasksExecutionServiceProvider.submit((String) server.get("displayName"), task);
+            } catch (Exception e) {
+                logger.error("Error while creating task for "+ server.get("displayName"), e);
             }
         }
     }
 
+    @Override
     protected List<Map<String, ?>> getServers() {
         return (List<Map<String, ?>>) getContextConfiguration().getConfigYml().get("hawkConnection");
     }
