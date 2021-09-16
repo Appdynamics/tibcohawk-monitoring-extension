@@ -8,24 +8,30 @@ The Tibco BW Monitoring Extension executes BW methods using BW hawk microagents 
 
 This extension works only with the standalone machine agent.
 
-**Note : By default, the Machine agent and AppServer agent can only send a fixed number of metrics to the controller. This extension potentially reports thousands of metrics, so to change this limit, please follow the instructions mentioned [here](https://docs.appdynamics.com/display/PRO40/Metrics+Limits).**
+## Prerequisites
 
+Before the extension is installed, the prerequisites mentioned [here](https://community.appdynamics.com/t5/Knowledge-Base/Extensions-Prerequisites-Guide/ta-p/35213) need to be met. Please do not proceed with the extension installation if the specified prerequisites are not met.
 
 ## Installation
 
 1. Run 'mvn clean install' from tibcohawk-monitoring-extension
 2. Copy and unzip TibcoHawkMonitor-\<version\>.zip from 'target' directory into \<machine_agent_dir\>/monitors/
-3. Edit config.yaml file in TibcoHawkMonitor/conf and provide the required configuration (see Configuration section)
-4. Configure BW hawk methods in metrics.xml file in TibcoHawkMonitor/conf
-5. Add the following Tibco jars, console.jar,console_agent_shared.jar,talon.jar,tibrvj.jar,util.jar,jms.jar,security.jar,tibcrypt.jar,tibjms.jar,tibrvjms.jar to lib folder. In BW 5.9 all the jars are available in tibrv folder.
+3. Edit config.yml file in TibcoHawkMonitor and provide the required configuration (see Configuration section)
+4. Configure BW hawk methods in metrics.xml file in TibcoHawkMonitor
+5. Add the following Tibco jars to lib folder. In BW 5.9 all the jars are available in tibrv folder.
+```
+console.jar,console_agent_shared.jar,talon.jar,tibrvj.jar,util.jar,jms.jar,security.jar,tibcrypt.jar,tibjms.jar,tibrvjms.jar
+```
 6. Set system variables like RV_HOME, PATH and LD_LIBRARY_PATH. For more information take a look at https://docs.tibco.com/pub/api-exchange-gateway/2.2.0/doc/html/GUID-86868063-8A1E-4348-8A5A-8B73772036D8.html
 7. Restart the Machine Agent.
+
+Please place the extension in the **"monitors"** directory of your **Machine Agent** installation directory. Do not place the extension in the **"extensions"** directory of your **Machine Agent** installation directory.
 
 ## Configuration
 
 ### config.yml
 
-**Note: Please avoid using tab (\t) when editing yaml files. You may want to validate the yaml file using a [yaml validator](http://yamllint.com/).**
+**Note: Please avoid using tab (\t) when editing yaml files. You may want to validate the yaml file using a [yaml validator](https://jsonformatter.org/yaml-validator).**
 
 | Param | Description | Example |
 | ----- | ----- | ----- |
@@ -102,8 +108,6 @@ numberOfThreadsPerDomain: 5
 ~~~
 
 ## Metrics
-Metric path is typically: **Application Infrastructure Performance|\<Tier\>|Custom Metrics|Tibco BW|** followed by the individual categories/metrics below:
-
 Metrics provided by this extension are depend on the methods and metrics configured in the metrics.xml. Below is list of methods and metrics they provide.
 
 ### GetMemoryUsage
@@ -187,6 +191,5 @@ Always feel free to fork and contribute any changes directly here on [GitHub](ht
 |          Name            |  Version   |
 |--------------------------|------------|
 |Extension Version         |2.0.0       |
-|Controller Compatibility  |4.5 or Later|
-|Machine Agent Version     |4.5.13+     |
 |Last Update               |20/08/2021 |
+|Change List|[ChangeLog](https://github.com/Appdynamics/tibcohawk-monitoring-extension/blob/master/CHANGELOG.md)|
