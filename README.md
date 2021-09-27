@@ -10,20 +10,26 @@ This extension works only with the standalone machine agent.
 
 ## Prerequisites
 
-Before the extension is installed, the prerequisites mentioned [here](https://community.appdynamics.com/t5/Knowledge-Base/Extensions-Prerequisites-Guide/ta-p/35213) need to be met. Please do not proceed with the extension installation if the specified prerequisites are not met.
+1. Before the extension is installed, the prerequisites mentioned [here](https://community.appdynamics.com/t5/Knowledge-Base/Extensions-Prerequisites-Guide/ta-p/35213) need to be met. Please do not proceed with the extension installation if the specified prerequisites are not met.
+
+2. Download and install [Apache Maven](https://maven.apache.org/) which is configured with `Java 8` to build the extension artifact from source. You can check the java version used in maven using command `mvn -v` or `mvn --version`. If your maven is using some other java version then please download java 8 for your platform and set JAVA_HOME parameter before starting maven.
 
 ## Installation
-
-1. Run 'mvn clean install' from tibcohawk-monitoring-extension
-2. Copy and unzip TibcoHawkMonitor-\<version\>.zip from 'target' directory into \<machine_agent_dir\>/monitors/
-3. Edit config.yml file in TibcoHawkMonitor and provide the required configuration (see Configuration section)
-4. Configure BW hawk methods in metrics.xml file in TibcoHawkMonitor
-5. Add the following Tibco jars to lib folder. In BW 5.9 all the jars are available in tibrv folder.
+1. Clone the "tibcohawk-monitoring-extension" repo using `git clone <repoUrl>` command.
+2. Create a `lib` folder in "tibcohawk-monitoring-extension" and copy the following jars in the `tibcohawk-monitoring-extension/lib` folder. (These jars are shipped with your Tibco product itself)
+```
+console.jar, jms.jar, talon.jar, tibjms.jar, tibrvjms.jar, console_agent_shared.jar, security.jar, tibcrypt.jar, tibrvj.jar, util.jar
+```        
+3. Run 'mvn clean install' from tibcohawk-monitoring-extension
+4. Copy and unzip TibcoHawkMonitor-\<version\>.zip from 'target' directory into \<machine_agent_dir\>/monitors/
+5. Edit config.yml file in TibcoHawkMonitor and provide the required configuration (see Configuration section)
+6. Configure BW hawk methods in metrics.xml file in TibcoHawkMonitor
+7. Add the following Tibco jars to lib folder. In BW 5.9 all the jars are available in tibrv folder.
 ```
 console.jar,console_agent_shared.jar,talon.jar,tibrvj.jar,util.jar,jms.jar,security.jar,tibcrypt.jar,tibjms.jar,tibrvjms.jar
 ```
-6. Set system variables like RV_HOME, PATH and LD_LIBRARY_PATH. For more information take a look at https://docs.tibco.com/pub/api-exchange-gateway/2.2.0/doc/html/GUID-86868063-8A1E-4348-8A5A-8B73772036D8.html
-7. Restart the Machine Agent.
+8. Set system variables like RV_HOME, PATH and LD_LIBRARY_PATH. For more information take a look at https://docs.tibco.com/pub/api-exchange-gateway/2.2.0/doc/html/GUID-86868063-8A1E-4348-8A5A-8B73772036D8.html
+9. Restart the Machine Agent.
 
 Please place the extension in the **"monitors"** directory of your **Machine Agent** installation directory. Do not place the extension in the **"extensions"** directory of your **Machine Agent** installation directory.
 
