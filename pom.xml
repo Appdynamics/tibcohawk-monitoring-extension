@@ -14,6 +14,12 @@
     </properties>
 
     <dependencies>
+        <!-- Override error_prone_annotations to latest version -->
+        <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+            <version>2.47.0</version>
+        </dependency>
         <dependency>
             <groupId>com.appdynamics</groupId>
             <artifactId>machine-agent</artifactId>
@@ -23,7 +29,7 @@
         <dependency>
             <groupId>com.appdynamics</groupId>
             <artifactId>appd-exts-commons</artifactId>
-            <version>2.2.4</version>
+            <version>2.2.20</version>
         </dependency>
         <dependency>
             <groupId>tibco</groupId>
@@ -130,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <filters>
@@ -157,9 +163,7 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Implementation-Title>Tibco Hawk Monitor v${project.version} Build Date
-                                            ${maven.build.timestamp}
-                                        </Implementation-Title>
+                                        <Implementation-Title>Tibco Hawk Monitor v${project.version} Build Date ${maven.build.timestamp}</Implementation-Title>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
